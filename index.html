@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گزارش کار پروژه</title>
+    <title>گزارش کار پایان نامه - مصطفی شهبازی</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -197,15 +197,15 @@
 
         <div class="author-info">
             <h3 class="text-xl font-semibold text-sky-700 mb-3">اطلاعات دانشجو:</h3>
-            <p><strong>نام و نام خانوادگی:</strong> [نام خود را وارد کنید]</p>
-            <p><strong>شماره دانشجویی:</strong> [شماره دانشجویی خود را وارد کنید]</p>
-            <p><strong>دانشگاه:</strong> [نام دانشگاه خود را وارد کنید]</p>
-            <p><strong>استاد راهنما:</strong> [نام استاد راهنما]</p>
+            <p><strong>نام و نام خانوادگی:</strong> مصطفی شهبازی</p>
+            <p><strong>شماره دانشجویی:</strong> - </p>
+            <p><strong>دانشگاه:</strong> دانگشاه تربیت مدرس - دانشکده علوم ریاضی</p>
+            <p><strong>استاد راهنما:</strong> دکتر رزقی </p>
         </div>
 
         <main id="progressReport">
             <div class="card" id="step-1">
-                <h2>گام اول: پیاده‌سازی کد مقاله (Latent Space)</h2>
+                <h2>گام اول: پیاده‌سازی کد مقاله (Image Space)</h2>
                 <p><span class="tag">وضعیت</span> <span class="status status-current">فعلی</span></p>
                 <h3>شرح فعالیت:</h3>
                 <p>
@@ -219,7 +219,7 @@
                     <li>باز تولید نتایج مربوط به FID score گزارش شده در مقاله (هدف: FID=1.73).</li>
                     <li>بررسی و تحلیل پارامترهای مدل و مقایسه با مدل‌های DiT و MDT.</li>
                 </ul>
-                <h3>اهداف کلیدی:</h3>
+                <h3>اهداف:</h3>
                 <ul>
                     <li>دستیابی به درک عمیق از معماری DiffiT و مکانیزم TMSA.</li>
                     <li>توانایی بازتولید نتایج اصلی مقاله در محیط کنترل‌شده.</li>
@@ -233,12 +233,12 @@
                 </ul>
                 <h3>پیشرفت:</h3>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 10%;">10%</div>
+                    <div class="progress-bar" style="width: 60%;">60%</div>
                 </div>
             </div>
 
             <div class="card" id="step-2">
-                <h2>گام دوم: تطبیق معماری مقاله با LORA, QLORA</h2>
+                <h2>گام دوم: تطبیق معماری مقاله با روش های fine-tuning </h2>
                 <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
                 <h3>شرح فعالیت:</h3>
                 <p>
@@ -251,7 +251,7 @@
                     <li>مقایسه عملکرد (FID score، تعداد پارامترها، سرعت آموزش و Inference) مدل‌های مجهز به LoRA/QLoRA با مدل پایه.</li>
                     <li>آزمایش بر روی دیتاست‌های ImageNet-256 و احتمالاً دیتاست‌های دیگر برای ارزیابی عمومیت روش.</li>
                 </ul>
-                <h3>اهداف کلیدی:</h3>
+                <h3>اهداف:</h3>
                 <ul>
                     <li>کاهش چشمگیر تعداد پارامترهای قابل آموزش مدل DiffiT.</li>
                     <li>امکان Fine-tuning سریع‌تر و با منابع کمتر برای وظایف خاص.</li>
@@ -262,6 +262,14 @@
                     <li>انتخاب بهینه رنک (rank) برای ماتریس‌های LoRA.</li>
                     <li>تنظیمات مربوط به کوانتیزه‌سازی در QLoRA و تاثیر آن بر پایداری آموزش.</li>
                     <li>اطمینان از اینکه تغییرات اعمال شده، ویژگی‌های اصلی مکانیزم TMSA را مختل نمی‌کند.</li>
+                </ul>
+                <h3>منابع</h3>
+                <ul>
+                    <li>
+                        <a href="https://gautam75.medium.com/exploring-different-lora-variants-for-efficient-llm-fine-tuning-4ca41179e658">
+                            Exploring different LoRA variants for efficient LLM Fine-Tuning
+                        </a>
+                    </li>
                 </ul>
                 <h3>پیشرفت:</h3>
                 <div class="progress-bar-container">
