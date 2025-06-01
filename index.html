@@ -101,6 +101,11 @@
             list-style-type: disc;
             padding-right: 1.5rem; /* Tailwind pr-6, equivalent to pl for LTR */
         }
+        .step-update-info { /* Class for step update date */
+            font-size: 0.75rem; /* Tailwind text-xs */
+            color: #6b7280; /* Tailwind gray-500 */
+            margin-top: 0.75rem; /* Tailwind mt-3 */
+        }
         .tag {
             display: inline-block;
             background-color: #dbeafe; /* Tailwind blue-100 */
@@ -201,6 +206,9 @@
             .author-info h3 {
                 font-size: 1.125rem; /* Tailwind text-lg */
             }
+            .step-update-info {
+                font-size: 0.65rem; /* Tailwind text-xs adjusted for mobile */
+            }
         }
     </style>
 </head>
@@ -262,6 +270,7 @@
                         <li>پیچیدگی‌های احتمالی در پیاده‌سازی دقیق مکانیزم TMSA.</li>
                         <li>تطبیق دقیق Hyperparameter ها برای رسیدن به نتایج مشابه مقاله.</li>
                     </ul>
+                    <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">۱۰ خرداد ۱۴۰۴، ساعت ۱۵:۳۰</span></p>
                     <h3>پیشرفت:</h3>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: 60%;">60%</div>
@@ -302,6 +311,7 @@
                             </a>
                         </li>
                     </ul>
+                    <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">۰۵ خرداد ۱۴۰۴، ساعت ۱۰:۰۰</span></p>
                     <h3>پیشرفت:</h3>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: 0%;">0%</div>
@@ -318,6 +328,7 @@
                         <li>[مورد ۱]</li>
                         <li>[مورد ۲]</li>
                     </ul>
+                    <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">تاریخ اولیه</span></p>
                     <h3>پیشرفت:</h3>
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: 0%;">0%</div>
@@ -328,15 +339,15 @@
 
             <footer class="text-center mt-12 py-6 border-t border-gray-300">
                 <p class="text-gray-600 text-sm">
-                    آخرین بروزرسانی: <span id="lastUpdated"></span>
+                    آخرین بروزرسانی کلی گزارش: <span id="overallLastUpdated"></span>
                 </p>
             </footer>
         </div>
     </div>
 
     <script>
-        // Function to update the progress of a step
-        function updateProgress(stepId, percentage) {
+        // Function to update the progress of a step and its last updated date
+        function updateStep(stepId, percentage, dateString) {
             const stepElement = document.getElementById(stepId);
             if (stepElement) {
                 const progressBar = stepElement.querySelector('.progress-bar');
@@ -344,14 +355,34 @@
                     progressBar.style.width = percentage + '%';
                     progressBar.textContent = percentage + '%';
                 }
+                const dateSpan = stepElement.querySelector('.step-update-date');
+                if (dateSpan) {
+                    if (dateString) {
+                        dateSpan.textContent = dateString;
+                    } else { // Auto-update with current date and time if no dateString is provided
+                        dateSpan.textContent = new Date().toLocaleDateString('fa-IR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                }
             }
         }
+        
+        // Example call: updateStep('step-1', 70); // Updates progress and sets step's date to now
+        // Example call: updateStep('step-2', 10, '۱۲ خرداد ۱۴۰۴، ساعت ۱۱:۰۰'); // Updates progress and sets specific date
 
-        // Set last updated date
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('fa-IR', {
+
+        // Set overall last updated date for the report
+        document.getElementById('overallLastUpdated').textContent = new Date().toLocaleDateString('fa-IR', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
 
         // Sidebar navigation and population
@@ -375,16 +406,14 @@
                     e.preventDefault();
                     const targetElement = document.getElementById(stepId);
                     if (targetElement) {
-                         // Scroll within the mainContentWrapper
                         mainContentWrapper.scrollTo({
-                            top: targetElement.offsetTop - mainContentWrapper.offsetTop - 20, // Adjust offset if needed
+                            top: targetElement.offsetTop - mainContentWrapper.offsetTop - 20, 
                             behavior: 'smooth'
                         });
                     }
 
                     if (window.innerWidth <= 768) {
                         sidebar.classList.remove('open');
-                        mainContentWrapper.style.paddingRight = '0';
                     }
                     sidebarNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
@@ -400,12 +429,6 @@
             if (menuToggle) {
                 menuToggle.addEventListener('click', function() {
                     sidebar.classList.toggle('open');
-                    if (sidebar.classList.contains('open')) {
-                         // Optional: Add a slight push to content if sidebar overlays,
-                         // but for now, it just opens over.
-                    } else {
-                        // Ensure padding is reset if sidebar was pushing content
-                    }
                 });
             }
 
@@ -417,7 +440,6 @@
                     const stepElement = document.getElementById(step.id);
                     if (stepElement) {
                         const rect = stepElement.getBoundingClientRect();
-                         // Consider elements whose top is near the top of the viewport of the scrollable area
                         const distanceToTop = Math.abs(rect.top - mainContentWrapper.getBoundingClientRect().top);
 
                         if (rect.top <= (mainContentWrapper.getBoundingClientRect().top + 150) && rect.bottom >= mainContentWrapper.getBoundingClientRect().top) {
@@ -435,13 +457,53 @@
                         a.classList.add('active');
                     }
                 });
-                 // If no section is "current" (e.g., scrolled to very top or bottom past sections),
-                 // you might want to ensure the first one is active if at top, or none.
                 if (!current && sidebarNav.firstChild && sidebarNav.firstChild.firstChild && mainContentWrapper.scrollTop < 100) {
-                    // sidebarNav.firstChild.firstChild.classList.add('active');
+                    // sidebarNav.firstChild.firstChild.classList.add('active'); // Optionally keep first active if scrolled to top
                 }
             });
+             // Initialize progress for existing steps (if needed, or set initial dates in HTML)
+            // updateStep('step-1', 60); // This will also update its date to now
         });
+
+        // Function to dynamically add new steps (if you implement this feature)
+        // function addStep(title, description, tasks = [], status = 'برنامه‌ریزی شده', progress = 0, initialDate = 'تاریخ اولیه') {
+        //     const mainContent = document.getElementById('progressReport');
+        //     const stepCount = mainContent.querySelectorAll('.card').length + 1;
+        //     const newStepId = `step-${stepCount}`;
+
+        //     let taskListHTML = '';
+        //     if (tasks.length > 0) {
+        //         taskListHTML = '<ul>' + tasks.map(task => `<li>${task}</li>`).join('') + '</ul>';
+        //     }
+            
+        //     const statusClass = status === 'فعلی' ? 'status-current' : status === 'تکمیل شده' ? 'status-completed' : 'status-planned';
+
+        //     const newStepHTML = `
+        //         <div class="card" id="${newStepId}">
+        //             <h2>گام ${stepCount}: ${title}</h2>
+        //             <p><span class="tag">وضعیت</span> <span class="status ${statusClass}">${status}</span></p>
+        //             <h3>شرح فعالیت:</h3>
+        //             <p>${description}</p>
+        //             ${taskListHTML}
+        //             <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">${initialDate}</span></p>
+        //             <h3>پیشرفت:</h3>
+        //             <div class="progress-bar-container">
+        //                 <div class="progress-bar" style="width: ${progress}%;">${progress}%</div>
+        //             </div>
+        //         </div>
+        //     `;
+        //     mainContent.insertAdjacentHTML('beforeend', newStepHTML);
+
+        //     // Add to sidebar
+        //     const sidebarNav = document.getElementById('sidebarNav');
+        //     const listItem = document.createElement('li');
+        //     const link = document.createElement('a');
+        //     link.href = `#${newStepId}`;
+        //     link.textContent = `گام ${stepCount}: ${title}`;
+        //     link.onclick = function(e) { /* ... (same click handler as above) ... */ };
+        //     listItem.appendChild(link);
+        //     sidebarNav.appendChild(listItem);
+        // }
     </script>
 </body>
 </html>
