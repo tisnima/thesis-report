@@ -11,9 +11,11 @@
             font-family: 'Vazirmatn', sans-serif;
             background-color: #f9fafb; /* Tailwind gray-50 */
             display: flex;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         .sidebar {
             width: 250px;
+            min-width: 250px; /* Prevent sidebar from shrinking too much */
             background-color: #1f2937; /* Tailwind gray-800 */
             color: white;
             padding: 1.5rem; /* Tailwind p-6 */
@@ -23,6 +25,7 @@
             right: 0;
             overflow-y: auto;
             transition: transform 0.3s ease-in-out;
+            z-index: 1000; /* Ensure sidebar is above content */
         }
         .sidebar h3 {
             font-size: 1.25rem; /* Tailwind text-xl */
@@ -47,11 +50,18 @@
             background-color: #3b82f6; /* Tailwind blue-500 */
             color: white;
         }
-        .main-content {
-            margin-right: 250px; /* Same as sidebar width */
-            padding: 1.5rem; /* Tailwind p-6 */
-            width: calc(100% - 250px);
+        .main-content-wrapper { /* New wrapper for main content */
+            flex-grow: 1;
+            padding-right: 250px; /* Space for the sidebar */
+            transition: padding-right 0.3s ease-in-out;
+            height: 100vh;
             overflow-y: auto;
+        }
+        .main-content {
+            padding: 1.5rem; /* Tailwind p-6 */
+            max-width: 900px; /* Increased max-width slightly */
+            margin-left: auto;
+            margin-right: auto;
         }
         .card {
             background-color: white;
@@ -63,6 +73,10 @@
         }
         .card:hover {
             transform: translateY(-5px);
+        }
+        .header-title { /* Class for the main h1 title */
+            font-size: 2.25rem; /* Tailwind text-4xl */
+            line-height: 2.5rem; /* Tailwind leading-10 */
         }
         .card h2 {
             font-size: 1.5rem; /* Tailwind text-2xl */
@@ -140,36 +154,52 @@
         .author-info strong {
             color: #0369a1; /* Tailwind sky-700 */
         }
+        .menu-toggle {
+            display: none; /* Hidden by default, shown in media query */
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100; /* Above sidebar when it's closed */
+            background-color: #1f2937;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            border: none;
+        }
 
-        /* Responsive sidebar for smaller screens */
+        /* Responsive styles */
         @media (max-width: 768px) {
             .sidebar {
-                transform: translateX(100%); /* Hide sidebar by default */
-                z-index: 1000;
+                transform: translateX(100%); /* Hide sidebar by default for RTL */
             }
             .sidebar.open {
                 transform: translateX(0);
             }
+            .main-content-wrapper {
+                padding-right: 0; /* Main content takes full width */
+            }
             .main-content {
-                margin-right: 0;
-                width: 100%;
+                padding: 1rem; /* Tailwind p-4 for smaller screens */
             }
             .menu-toggle {
                 display: block;
-                position: fixed;
-                top: 1rem;
-                right: 1rem; /* Adjusted for RTL */
-                z-index: 1100;
-                background-color: #1f2937; /* Tailwind gray-800 */
-                color: white;
-                padding: 0.5rem 0.75rem;
-                border-radius: 0.375rem; /* Tailwind rounded-md */
-                cursor: pointer;
             }
-        }
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
+            .header-title { /* Adjust main title size */
+                font-size: 1.875rem; /* Tailwind text-3xl */
+                line-height: 2.25rem; /* Tailwind leading-9 */
+            }
+            .card h2 { /* Adjust card title size */
+                font-size: 1.25rem; /* Tailwind text-xl */
+            }
+            .card h3 { /* Adjust card subtitle size */
+                font-size: 1.125rem; /* Tailwind text-lg */
+            }
+            .author-info {
+                padding: 0.75rem; /* Tailwind p-3 */
+            }
+            .author-info h3 {
+                font-size: 1.125rem; /* Tailwind text-lg */
             }
         }
     </style>
@@ -183,123 +213,125 @@
 
     <button class="menu-toggle" id="menuToggle">☰ فهرست</button>
 
-    <div class="main-content container mx-auto max-w-4xl">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-blue-600">گزارش پیشرفت پروژه: پیاده‌سازی و توسعه DiffiT</h1>
-            <p class="text-lg text-gray-700 mt-2">
-                این گزارش به منظور بررسی مراحل پیاده‌سازی و بهبودهای پیشنهادی برای مقاله
-                <a href="https://arxiv.org/abs/2312.02139" target="_blank" class="text-blue-500 hover:underline">
-                "DiffiT: Diffusion Vision Transformers for Image Generation"
-                </a>
-                تهیه شده است.
-            </p>
-        </header>
+    <div class="main-content-wrapper" id="mainContentWrapper">
+        <div class="main-content">
+            <header class="text-center mb-10">
+                <h1 class="header-title font-bold text-blue-600">گزارش پیشرفت پروژه: پیاده‌سازی و توسعه DiffiT</h1>
+                <p class="text-lg text-gray-700 mt-2">
+                    این گزارش به منظور بررسی مراحل پیاده‌سازی و بهبودهای پیشنهادی برای مقاله
+                    <a href="https://arxiv.org/abs/2312.02139" target="_blank" class="text-blue-500 hover:underline">
+                    "DiffiT: Diffusion Vision Transformers for Image Generation"
+                    </a>
+                    تهیه شده است.
+                </p>
+            </header>
 
-        <div class="author-info">
-            <h3 class="text-xl font-semibold text-sky-700 mb-3">اطلاعات دانشجو:</h3>
-            <p><strong>نام و نام خانوادگی:</strong> مصطفی شهبازی</p>
-            <p><strong>شماره دانشجویی:</strong> - </p>
-            <p><strong>دانشگاه:</strong> دانگشاه تربیت مدرس - دانشکده علوم ریاضی</p>
-            <p><strong>استاد راهنما:</strong> دکتر رزقی </p>
+            <div class="author-info">
+                <h3 class="text-xl font-semibold text-sky-700 mb-3">اطلاعات دانشجو:</h3>
+                <p><strong>نام و نام خانوادگی:</strong> مصطفی شهبازی</p>
+                <p><strong>شماره دانشجویی:</strong> - </p>
+                <p><strong>دانشگاه:</strong> دانگشاه تربیت مدرس - دانشکده علوم ریاضی</p>
+                <p><strong>استاد راهنما:</strong> دکتر رزقی </p>
+            </div>
+
+            <main id="progressReport">
+                <div class="card" id="step-1">
+                    <h2>گام اول: پیاده‌سازی کد مقاله (Image Space)</h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-current">فعلی</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>
+                        در این گام، تمرکز بر پیاده‌سازی بخش اصلی مقاله یعنی مدل DiffiT برای تولید تصویر در فضای نهان (Latent Space) است.
+                        این بخش شامل موارد زیر می‌باشد:
+                    </p>
+                    <ul>
+                        <li>پیاده‌سازی معماری Vision Transformer (ViT) به عنوان پایه مدل.</li>
+                        <li>پیاده‌سازی مکانیزم Time-dependant Multihead Self Attention (TMSA) برای کنترل فرآیند Denoising.</li>
+                        <li>آموزش مدل بر روی دیتاست ImageNet-256 طبق توضیحات مقاله.</li>
+                        <li>باز تولید نتایج مربوط به FID score گزارش شده در مقاله (هدف: FID=1.73).</li>
+                        <li>بررسی و تحلیل پارامترهای مدل و مقایسه با مدل‌های DiT و MDT.</li>
+                    </ul>
+                    <h3>اهداف:</h3>
+                    <ul>
+                        <li>دستیابی به درک عمیق از معماری DiffiT و مکانیزم TMSA.</li>
+                        <li>توانایی بازتولید نتایج اصلی مقاله در محیط کنترل‌شده.</li>
+                        <li>ایجاد یک پایه‌کد (Baseline) قوی برای گام‌های بعدی توسعه.</li>
+                    </ul>
+                    <h3>چالش‌های پیش‌بینی شده:</h3>
+                    <ul>
+                        <li>نیاز به منابع محاسباتی قابل توجه برای آموزش مدل روی ImageNet.</li>
+                        <li>پیچیدگی‌های احتمالی در پیاده‌سازی دقیق مکانیزم TMSA.</li>
+                        <li>تطبیق دقیق Hyperparameter ها برای رسیدن به نتایج مشابه مقاله.</li>
+                    </ul>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 60%;">60%</div>
+                    </div>
+                </div>
+
+                <div class="card" id="step-2">
+                    <h2>گام دوم: تطبیق معماری مقاله با روش های fine-tuning </h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>
+                        پس از پیاده‌سازی موفقیت‌آمیز مدل پایه، در این گام به بررسی و پیاده‌سازی روش‌های بهینه‌سازی و کاهش پارامتر برای مدل DiffiT با استفاده از تکنیک‌های Low-Rank Adaptation (LoRA) و Quantized LoRA (QLoRA) پرداخته خواهد شد.
+                    </p>
+                    <ul>
+                        <li>مطالعه و بررسی نحوه ادغام LoRA با معماری مبتنی بر Transformer مدل DiffiT.</li>
+                        <li>پیاده‌سازی LoRA برای لایه‌های Attention و MLP در بلوک‌های DiffiT.</li>
+                        <li>بررسی تاثیر استفاده از QLoRA برای کاهش بیشتر حافظه و افزایش سرعت Inference بدون افت قابل توجه کیفیت.</li>
+                        <li>مقایسه عملکرد (FID score، تعداد پارامترها، سرعت آموزش و Inference) مدل‌های مجهز به LoRA/QLoRA با مدل پایه.</li>
+                        <li>آزمایش بر روی دیتاست‌های ImageNet-256 و احتمالاً دیتاست‌های دیگر برای ارزیابی عمومیت روش.</li>
+                    </ul>
+                    <h3>اهداف:</h3>
+                    <ul>
+                        <li>کاهش چشمگیر تعداد پارامترهای قابل آموزش مدل DiffiT.</li>
+                        <li>امکان Fine-tuning سریع‌تر و با منابع کمتر برای وظایف خاص.</li>
+                        <li>بررسی توازن بین کاهش پارامتر و حفظ کیفیت تولید تصویر.</li>
+                    </ul>
+                    <h3>چالش‌های پیش‌بینی شده:</h3>
+                    <ul>
+                        <li>انتخاب بهینه رنک (rank) برای ماتریس‌های LoRA.</li>
+                        <li>تنظیمات مربوط به کوانتیزه‌سازی در QLoRA و تاثیر آن بر پایداری آموزش.</li>
+                        <li>اطمینان از اینکه تغییرات اعمال شده، ویژگی‌های اصلی مکانیزم TMSA را مختل نمی‌کند.</li>
+                    </ul>
+                    <h3>منابع</h3>
+                    <ul>
+                        <li>
+                            <a href="https://gautam75.medium.com/exploring-different-lora-variants-for-efficient-llm-fine-tuning-4ca41179e658" target="_blank" class="text-blue-500 hover:underline">
+                                Exploring different LoRA variants for efficient LLM Fine-Tuning
+                            </a>
+                        </li>
+                    </ul>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+
+                <!--
+                <div class="card" id="step-3">
+                    <h2>گام سوم: [عنوان گام سوم]</h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>[توضیحات گام سوم]</p>
+                    <ul>
+                        <li>[مورد ۱]</li>
+                        <li>[مورد ۲]</li>
+                    </ul>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+                -->
+            </main>
+
+            <footer class="text-center mt-12 py-6 border-t border-gray-300">
+                <p class="text-gray-600 text-sm">
+                    آخرین بروزرسانی: <span id="lastUpdated"></span>
+                </p>
+            </footer>
         </div>
-
-        <main id="progressReport">
-            <div class="card" id="step-1">
-                <h2>گام اول: پیاده‌سازی کد مقاله (Image Space)</h2>
-                <p><span class="tag">وضعیت</span> <span class="status status-current">فعلی</span></p>
-                <h3>شرح فعالیت:</h3>
-                <p>
-                    در این گام، تمرکز بر پیاده‌سازی بخش اصلی مقاله یعنی مدل DiffiT برای تولید تصویر در فضای نهان (Latent Space) است.
-                    این بخش شامل موارد زیر می‌باشد:
-                </p>
-                <ul>
-                    <li>پیاده‌سازی معماری Vision Transformer (ViT) به عنوان پایه مدل.</li>
-                    <li>پیاده‌سازی مکانیزم Time-dependant Multihead Self Attention (TMSA) برای کنترل فرآیند Denoising.</li>
-                    <li>آموزش مدل بر روی دیتاست ImageNet-256 طبق توضیحات مقاله.</li>
-                    <li>باز تولید نتایج مربوط به FID score گزارش شده در مقاله (هدف: FID=1.73).</li>
-                    <li>بررسی و تحلیل پارامترهای مدل و مقایسه با مدل‌های DiT و MDT.</li>
-                </ul>
-                <h3>اهداف:</h3>
-                <ul>
-                    <li>دستیابی به درک عمیق از معماری DiffiT و مکانیزم TMSA.</li>
-                    <li>توانایی بازتولید نتایج اصلی مقاله در محیط کنترل‌شده.</li>
-                    <li>ایجاد یک پایه‌کد (Baseline) قوی برای گام‌های بعدی توسعه.</li>
-                </ul>
-                <h3>چالش‌های پیش‌بینی شده:</h3>
-                <ul>
-                    <li>نیاز به منابع محاسباتی قابل توجه برای آموزش مدل روی ImageNet.</li>
-                    <li>پیچیدگی‌های احتمالی در پیاده‌سازی دقیق مکانیزم TMSA.</li>
-                    <li>تطبیق دقیق Hyperparameter ها برای رسیدن به نتایج مشابه مقاله.</li>
-                </ul>
-                <h3>پیشرفت:</h3>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 60%;">60%</div>
-                </div>
-            </div>
-
-            <div class="card" id="step-2">
-                <h2>گام دوم: تطبیق معماری مقاله با روش های fine-tuning </h2>
-                <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
-                <h3>شرح فعالیت:</h3>
-                <p>
-                    پس از پیاده‌سازی موفقیت‌آمیز مدل پایه، در این گام به بررسی و پیاده‌سازی روش‌های بهینه‌سازی و کاهش پارامتر برای مدل DiffiT با استفاده از تکنیک‌های Low-Rank Adaptation (LoRA) و Quantized LoRA (QLoRA) پرداخته خواهد شد.
-                </p>
-                <ul>
-                    <li>مطالعه و بررسی نحوه ادغام LoRA با معماری مبتنی بر Transformer مدل DiffiT.</li>
-                    <li>پیاده‌سازی LoRA برای لایه‌های Attention و MLP در بلوک‌های DiffiT.</li>
-                    <li>بررسی تاثیر استفاده از QLoRA برای کاهش بیشتر حافظه و افزایش سرعت Inference بدون افت قابل توجه کیفیت.</li>
-                    <li>مقایسه عملکرد (FID score، تعداد پارامترها، سرعت آموزش و Inference) مدل‌های مجهز به LoRA/QLoRA با مدل پایه.</li>
-                    <li>آزمایش بر روی دیتاست‌های ImageNet-256 و احتمالاً دیتاست‌های دیگر برای ارزیابی عمومیت روش.</li>
-                </ul>
-                <h3>اهداف:</h3>
-                <ul>
-                    <li>کاهش چشمگیر تعداد پارامترهای قابل آموزش مدل DiffiT.</li>
-                    <li>امکان Fine-tuning سریع‌تر و با منابع کمتر برای وظایف خاص.</li>
-                    <li>بررسی توازن بین کاهش پارامتر و حفظ کیفیت تولید تصویر.</li>
-                </ul>
-                <h3>چالش‌های پیش‌بینی شده:</h3>
-                <ul>
-                    <li>انتخاب بهینه رنک (rank) برای ماتریس‌های LoRA.</li>
-                    <li>تنظیمات مربوط به کوانتیزه‌سازی در QLoRA و تاثیر آن بر پایداری آموزش.</li>
-                    <li>اطمینان از اینکه تغییرات اعمال شده، ویژگی‌های اصلی مکانیزم TMSA را مختل نمی‌کند.</li>
-                </ul>
-                <h3>منابع</h3>
-                <ul>
-                    <li>
-                        <a href="https://gautam75.medium.com/exploring-different-lora-variants-for-efficient-llm-fine-tuning-4ca41179e658">
-                            Exploring different LoRA variants for efficient LLM Fine-Tuning
-                        </a>
-                    </li>
-                </ul>
-                <h3>پیشرفت:</h3>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 0%;">0%</div>
-                </div>
-            </div>
-
-            <!--
-            <div class="card" id="step-3">
-                <h2>گام سوم: [عنوان گام سوم]</h2>
-                <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
-                <h3>شرح فعالیت:</h3>
-                <p>[توضیحات گام سوم]</p>
-                <ul>
-                    <li>[مورد ۱]</li>
-                    <li>[مورد ۲]</li>
-                </ul>
-                <h3>پیشرفت:</h3>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 0%;">0%</div>
-                </div>
-            </div>
-            -->
-        </main>
-
-        <footer class="text-center mt-12 py-6 border-t border-gray-300">
-            <p class="text-gray-600 text-sm">
-                آخرین بروزرسانی: <span id="lastUpdated"></span>
-            </p>
-        </footer>
     </div>
 
     <script>
@@ -329,6 +361,8 @@
             const steps = reportContainer.querySelectorAll('.card');
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.getElementById('menuToggle');
+            const mainContentWrapper = document.getElementById('mainContentWrapper');
+
 
             steps.forEach(step => {
                 const stepTitle = step.querySelector('h2').textContent;
@@ -339,12 +373,19 @@
                 link.textContent = stepTitle;
                 link.onclick = function(e) {
                     e.preventDefault();
-                    document.getElementById(stepId).scrollIntoView({ behavior: 'smooth' });
-                    // For mobile, close sidebar after click
+                    const targetElement = document.getElementById(stepId);
+                    if (targetElement) {
+                         // Scroll within the mainContentWrapper
+                        mainContentWrapper.scrollTo({
+                            top: targetElement.offsetTop - mainContentWrapper.offsetTop - 20, // Adjust offset if needed
+                            behavior: 'smooth'
+                        });
+                    }
+
                     if (window.innerWidth <= 768) {
                         sidebar.classList.remove('open');
+                        mainContentWrapper.style.paddingRight = '0';
                     }
-                    // Optional: Highlight active link
                     sidebarNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
                     link.classList.add('active');
                 };
@@ -352,27 +393,39 @@
                 sidebarNav.appendChild(listItem);
             });
 
-            // Set first link as active initially
             if (sidebarNav.firstChild && sidebarNav.firstChild.firstChild) {
                  sidebarNav.firstChild.firstChild.classList.add('active');
             }
 
-
-            // Mobile menu toggle
             if (menuToggle) {
                 menuToggle.addEventListener('click', function() {
                     sidebar.classList.toggle('open');
+                    if (sidebar.classList.contains('open')) {
+                         // Optional: Add a slight push to content if sidebar overlays,
+                         // but for now, it just opens over.
+                    } else {
+                        // Ensure padding is reset if sidebar was pushing content
+                    }
                 });
             }
 
-            // Highlight sidebar link on scroll
-            const mainContentArea = document.querySelector('.main-content'); // or window
-            mainContentArea.addEventListener('scroll', function() {
+            mainContentWrapper.addEventListener('scroll', function() {
                 let current = '';
+                let minDistance = Infinity;
+
                 steps.forEach(step => {
-                    const stepTop = step.offsetTop - 150; // Adjust offset as needed
-                    if (mainContentArea.scrollTop >= stepTop) {
-                        current = step.id;
+                    const stepElement = document.getElementById(step.id);
+                    if (stepElement) {
+                        const rect = stepElement.getBoundingClientRect();
+                         // Consider elements whose top is near the top of the viewport of the scrollable area
+                        const distanceToTop = Math.abs(rect.top - mainContentWrapper.getBoundingClientRect().top);
+
+                        if (rect.top <= (mainContentWrapper.getBoundingClientRect().top + 150) && rect.bottom >= mainContentWrapper.getBoundingClientRect().top) {
+                           if (distanceToTop < minDistance) {
+                               minDistance = distanceToTop;
+                               current = step.id;
+                           }
+                        }
                     }
                 });
 
@@ -382,44 +435,13 @@
                         a.classList.add('active');
                     }
                 });
+                 // If no section is "current" (e.g., scrolled to very top or bottom past sections),
+                 // you might want to ensure the first one is active if at top, or none.
+                if (!current && sidebarNav.firstChild && sidebarNav.firstChild.firstChild && mainContentWrapper.scrollTop < 100) {
+                    // sidebarNav.firstChild.firstChild.classList.add('active');
+                }
             });
         });
-
-        // TODO: Add JavaScript to dynamically add new steps if needed
-        // function addStep(title, description, tasks = [], status = 'برنامه‌ریزی شده') {
-        //     const mainContent = document.getElementById('progressReport');
-        //     const stepCount = mainContent.querySelectorAll('.card').length + 1;
-        //     const newStepId = `step-${stepCount}`;
-
-        //     let taskList = '';
-        //     if (tasks.length > 0) {
-        //         taskList = '<ul>' + tasks.map(task => `<li>${task}</li>`).join('') + '</ul>';
-        //     }
-
-        //     const newStepHTML = `
-        //         <div class="card" id="${newStepId}">
-        //             <h2>گام ${stepCount}: ${title}</h2>
-        //             <p><span class="tag">وضعیت</span> <span class="status ${status === 'فعلی' ? 'status-current' : status === 'تکمیل شده' ? 'status-completed' : 'status-planned'}">${status}</span></p>
-        //             <h3>شرح فعالیت:</h3>
-        //             <p>${description}</p>
-        //             ${taskList}
-        //             <h3>پیشرفت:</h3>
-        //             <div class="progress-bar-container">
-        //                 <div class="progress-bar" style="width: 0%;">0%</div>
-        //             </div>
-        //         </div>
-        //     `;
-        //     mainContent.insertAdjacentHTML('beforeend', newStepHTML);
-        //     // Also update sidebar
-        //     const sidebarNav = document.getElementById('sidebarNav');
-        //     const listItem = document.createElement('li');
-        //     const link = document.createElement('a');
-        //     link.href = `#${newStepId}`;
-        //     link.textContent = `گام ${stepCount}: ${title}`;
-        //     link.onclick = function(e) { /* ... same click handler ... */ };
-        //     listItem.appendChild(link);
-        //     sidebarNav.appendChild(listItem);
-        // }
     </script>
 </body>
 </html>
