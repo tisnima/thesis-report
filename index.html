@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش کار پروژه</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f9fafb; /* Tailwind gray-50 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* Tailwind rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-lg */
+            padding: 1.5rem; /* Tailwind p-6 */
+            margin-bottom: 1.5rem; /* Tailwind mb-6 */
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            font-size: 1.5rem; /* Tailwind text-2xl */
+            font-weight: 700; /* Tailwind font-bold */
+            color: #1f2937; /* Tailwind gray-800 */
+            margin-bottom: 1rem; /* Tailwind mb-4 */
+            border-bottom: 2px solid #60a5fa; /* Tailwind blue-400 */
+            padding-bottom: 0.5rem; /* Tailwind pb-2 */
+        }
+        .card h3 {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 600; /* Tailwind font-semibold */
+            color: #374151; /* Tailwind gray-700 */
+            margin-top: 1rem; /* Tailwind mt-4 */
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+        }
+        .card p, .card ul {
+            color: #4b5563; /* Tailwind gray-600 */
+            line-height: 1.75; /* Tailwind leading-relaxed */
+        }
+        .card ul {
+            list-style-type: disc;
+            padding-right: 1.5rem; /* Tailwind pr-6, equivalent to pl for LTR */
+        }
+        .tag {
+            display: inline-block;
+            background-color: #dbeafe; /* Tailwind blue-100 */
+            color: #1e40af; /* Tailwind blue-800 */
+            padding: 0.25rem 0.75rem; /* Tailwind px-3 py-1 */
+            border-radius: 9999px; /* Tailwind rounded-full */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            font-weight: 500; /* Tailwind font-medium */
+            margin-right: 0.5rem; /* Tailwind mr-2 */
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+        }
+        .status {
+            font-weight: bold;
+        }
+        .status-current {
+            color: #2563eb; /* Tailwind blue-600 */
+        }
+        .status-planned {
+            color: #f59e0b; /* Tailwind amber-500 */
+        }
+        .status-completed {
+            color: #16a34a; /* Tailwind green-600 */
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            overflow: hidden;
+            margin-top: 0.5rem; /* Tailwind mt-2 */
+        }
+        .progress-bar {
+            height: 1.25rem; /* Tailwind h-5 */
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 1.25rem; /* Tailwind leading-5 */
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 p-4 sm:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-blue-600">گزارش پیشرفت پروژه: پیاده‌سازی و توسعه DiffiT</h1>
+            <p class="text-lg text-gray-700 mt-2">
+                این گزارش به منظور بررسی مراحل پیاده‌سازی و بهبودهای پیشنهادی برای مقاله
+                <a href="https://arxiv.org/abs/2312.02139" target="_blank" class="text-blue-500 hover:underline">
+                "DiffiT: Diffusion Vision Transformers for Image Generation"
+                </a>
+                تهیه شده است.
+            </p>
+        </header>
+
+        <main id="progressReport">
+            <div class="card" id="step-1">
+                <h2>گام اول: پیاده‌سازی کد مقاله (Latent Space)</h2>
+                <p><span class="tag">وضعیت</span> <span class="status status-current">فعلی</span></p>
+                <h3>شرح فعالیت:</h3>
+                <p>
+                    در این گام، تمرکز بر پیاده‌سازی بخش اصلی مقاله یعنی مدل DiffiT برای تولید تصویر در فضای نهان (Latent Space) است.
+                    این بخش شامل موارد زیر می‌باشد:
+                </p>
+                <ul>
+                    <li>پیاده‌سازی معماری Vision Transformer (ViT) به عنوان پایه مدل.</li>
+                    <li>پیاده‌سازی مکانیزم Time-dependant Multihead Self Attention (TMSA) برای کنترل فرآیند Denoising.</li>
+                    <li>آموزش مدل بر روی دیتاست ImageNet-256 طبق توضیحات مقاله.</li>
+                    <li>باز تولید نتایج مربوط به FID score گزارش شده در مقاله (هدف: FID=1.73).</li>
+                    <li>بررسی و تحلیل پارامترهای مدل و مقایسه با مدل‌های DiT و MDT.</li>
+                </ul>
+                <h3>اهداف کلیدی:</h3>
+                <ul>
+                    <li>دستیابی به درک عمیق از معماری DiffiT و مکانیزم TMSA.</li>
+                    <li>توانایی بازتولید نتایج اصلی مقاله در محیط کنترل‌شده.</li>
+                    <li>ایجاد یک پایه‌کد (Baseline) قوی برای گام‌های بعدی توسعه.</li>
+                </ul>
+                <h3>چالش‌های پیش‌بینی شده:</h3>
+                <ul>
+                    <li>نیاز به منابع محاسباتی قابل توجه برای آموزش مدل روی ImageNet.</li>
+                    <li>پیچیدگی‌های احتمالی در پیاده‌سازی دقیق مکانیزم TMSA.</li>
+                    <li>تطبیق دقیق Hyperparameter ها برای رسیدن به نتایج مشابه مقاله.</li>
+                </ul>
+                <h3>پیشرفت:</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 10%;">10%</div>
+                </div>
+            </div>
+
+            <div class="card" id="step-2">
+                <h2>گام دوم: تطبیق معماری مقاله با LORA, QLORA</h2>
+                <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
+                <h3>شرح فعالیت:</h3>
+                <p>
+                    پس از پیاده‌سازی موفقیت‌آمیز مدل پایه، در این گام به بررسی و پیاده‌سازی روش‌های بهینه‌سازی و کاهش پارامتر برای مدل DiffiT با استفاده از تکنیک‌های Low-Rank Adaptation (LoRA) و Quantized LoRA (QLoRA) پرداخته خواهد شد.
+                </p>
+                <ul>
+                    <li>مطالعه و بررسی نحوه ادغام LoRA با معماری مبتنی بر Transformer مدل DiffiT.</li>
+                    <li>پیاده‌سازی LoRA برای لایه‌های Attention و MLP در بلوک‌های DiffiT.</li>
+                    <li>بررسی تاثیر استفاده از QLoRA برای کاهش بیشتر حافظه و افزایش سرعت Inference بدون افت قابل توجه کیفیت.</li>
+                    <li>مقایسه عملکرد (FID score، تعداد پارامترها، سرعت آموزش و Inference) مدل‌های مجهز به LoRA/QLoRA با مدل پایه.</li>
+                    <li>آزمایش بر روی دیتاست‌های ImageNet-256 و احتمالاً دیتاست‌های دیگر برای ارزیابی عمومیت روش.</li>
+                </ul>
+                <h3>اهداف کلیدی:</h3>
+                <ul>
+                    <li>کاهش چشمگیر تعداد پارامترهای قابل آموزش مدل DiffiT.</li>
+                    <li>امکان Fine-tuning سریع‌تر و با منابع کمتر برای وظایف خاص.</li>
+                    <li>بررسی توازن بین کاهش پارامتر و حفظ کیفیت تولید تصویر.</li>
+                </ul>
+                <h3>چالش‌های پیش‌بینی شده:</h3>
+                <ul>
+                    <li>انتخاب بهینه رنک (rank) برای ماتریس‌های LoRA.</li>
+                    <li>تنظیمات مربوط به کوانتیزه‌سازی در QLoRA و تاثیر آن بر پایداری آموزش.</li>
+                    <li>اطمینان از اینکه تغییرات اعمال شده، ویژگی‌های اصلی مکانیزم TMSA را مختل نمی‌کند.</li>
+                </ul>
+                <h3>پیشرفت:</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 0%;">0%</div>
+                </div>
+            </div>
+
+            <!--
+            <div class="card" id="step-3">
+                <h2>گام سوم: [عنوان گام سوم]</h2>
+                <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
+                <h3>شرح فعالیت:</h3>
+                <p>[توضیحات گام سوم]</p>
+                <ul>
+                    <li>[مورد ۱]</li>
+                    <li>[مورد ۲]</li>
+                </ul>
+                <h3>پیشرفت:</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 0%;">0%</div>
+                </div>
+            </div>
+            -->
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-300">
+            <p class="text-gray-600 text-sm">
+                آخرین بروزرسانی: <span id="lastUpdated"></span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Function to update the progress of a step
+        function updateProgress(stepId, percentage) {
+            const stepElement = document.getElementById(stepId);
+            if (stepElement) {
+                const progressBar = stepElement.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = percentage + '%';
+                    progressBar.textContent = percentage + '%';
+                }
+            }
+        }
+
+        // Example of updating progress for step 1
+        // You can call this function when actual progress is made
+        // updateProgress('step-1', 25); // Sets progress of step 1 to 25%
+
+        // Set last updated date
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('fa-IR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // TODO: Add JavaScript to dynamically add new steps if needed
+        // function addStep(title, description, tasks = [], status = 'برنامه‌ریزی شده') {
+        //     const mainContent = document.getElementById('progressReport');
+        //     const stepCount = mainContent.querySelectorAll('.card').length + 1;
+        //     const newStepId = `step-${stepCount}`;
+
+        //     let taskList = '';
+        //     if (tasks.length > 0) {
+        //         taskList = '<ul>' + tasks.map(task => `<li>${task}</li>`).join('') + '</ul>';
+        //     }
+
+        //     const newStepHTML = `
+        //         <div class="card" id="${newStepId}">
+        //             <h2>گام ${stepCount}: ${title}</h2>
+        //             <p><span class="tag">وضعیت</span> <span class="status ${status === 'فعلی' ? 'status-current' : status === 'تکمیل شده' ? 'status-completed' : 'status-planned'}">${status}</span></p>
+        //             <h3>شرح فعالیت:</h3>
+        //             <p>${description}</p>
+        //             ${taskList}
+        //             <h3>پیشرفت:</h3>
+        //             <div class="progress-bar-container">
+        //                 <div class="progress-bar" style="width: 0%;">0%</div>
+        //             </div>
+        //         </div>
+        //     `;
+        //     mainContent.insertAdjacentHTML('beforeend', newStepHTML);
+        // }
+
+        // Example: addStep("گام سوم: تست مدل بر روی دیتاست جدید", "در این گام مدل را بر روی دیتاست CelebA-HQ تست خواهیم کرد.", ["آماده سازی دیتاست", "اجرای تست‌ها", "تحلیل نتایج"]);
+    </script>
+</body>
+</html>
