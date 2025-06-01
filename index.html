@@ -10,6 +10,48 @@
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: #f9fafb; /* Tailwind gray-50 */
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #1f2937; /* Tailwind gray-800 */
+            color: white;
+            padding: 1.5rem; /* Tailwind p-6 */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar h3 {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 700; /* Tailwind font-bold */
+            margin-bottom: 1.5rem; /* Tailwind mb-6 */
+            border-bottom: 1px solid #4b5563; /* Tailwind gray-600 */
+            padding-bottom: 0.75rem; /* Tailwind pb-3 */
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li a {
+            display: block;
+            color: #d1d5db; /* Tailwind gray-300 */
+            padding: 0.75rem 1rem; /* Tailwind py-3 px-4 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            transition: background-color 0.2s ease, color 0.2s ease;
+            text-decoration: none;
+        }
+        .sidebar li a:hover, .sidebar li a.active {
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            color: white;
+        }
+        .main-content {
+            margin-right: 250px; /* Same as sidebar width */
+            padding: 1.5rem; /* Tailwind p-6 */
+            width: calc(100% - 250px);
+            overflow-y: auto;
         }
         .card {
             background-color: white;
@@ -84,10 +126,64 @@
             line-height: 1.25rem; /* Tailwind leading-5 */
             transition: width 0.5s ease-in-out;
         }
+        .author-info {
+            background-color: #e0f2fe; /* Tailwind light blue - sky-100 */
+            border: 1px solid #7dd3fc; /* Tailwind sky-300 */
+            padding: 1rem; /* Tailwind p-4 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            margin-bottom: 2rem; /* Tailwind mb-8 */
+        }
+        .author-info p {
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+            color: #0c4a6e; /* Tailwind sky-800 */
+        }
+        .author-info strong {
+            color: #0369a1; /* Tailwind sky-700 */
+        }
+
+        /* Responsive sidebar for smaller screens */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%); /* Hide sidebar by default */
+                z-index: 1000;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+            }
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                right: 1rem; /* Adjusted for RTL */
+                z-index: 1100;
+                background-color: #1f2937; /* Tailwind gray-800 */
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 0.375rem; /* Tailwind rounded-md */
+                cursor: pointer;
+            }
+        }
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4 sm:p-8">
-    <div class="container mx-auto max-w-4xl">
+<body class="bg-gray-100 text-gray-900">
+    <div class="sidebar" id="sidebar">
+        <h3>فهرست گام‌ها</h3>
+        <ul id="sidebarNav">
+            </ul>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle">☰ فهرست</button>
+
+    <div class="main-content container mx-auto max-w-4xl">
         <header class="text-center mb-10">
             <h1 class="text-4xl font-bold text-blue-600">گزارش پیشرفت پروژه: پیاده‌سازی و توسعه DiffiT</h1>
             <p class="text-lg text-gray-700 mt-2">
@@ -98,6 +194,14 @@
                 تهیه شده است.
             </p>
         </header>
+
+        <div class="author-info">
+            <h3 class="text-xl font-semibold text-sky-700 mb-3">اطلاعات دانشجو:</h3>
+            <p><strong>نام و نام خانوادگی:</strong> [نام خود را وارد کنید]</p>
+            <p><strong>شماره دانشجویی:</strong> [شماره دانشجویی خود را وارد کنید]</p>
+            <p><strong>دانشگاه:</strong> [نام دانشگاه خود را وارد کنید]</p>
+            <p><strong>استاد راهنما:</strong> [نام استاد راهنما]</p>
+        </div>
 
         <main id="progressReport">
             <div class="card" id="step-1">
@@ -203,15 +307,74 @@
             }
         }
 
-        // Example of updating progress for step 1
-        // You can call this function when actual progress is made
-        // updateProgress('step-1', 25); // Sets progress of step 1 to 25%
-
         // Set last updated date
         document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('fa-IR', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
+        });
+
+        // Sidebar navigation and population
+        document.addEventListener('DOMContentLoaded', function () {
+            const reportContainer = document.getElementById('progressReport');
+            const sidebarNav = document.getElementById('sidebarNav');
+            const steps = reportContainer.querySelectorAll('.card');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+
+            steps.forEach(step => {
+                const stepTitle = step.querySelector('h2').textContent;
+                const stepId = step.id;
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `#${stepId}`;
+                link.textContent = stepTitle;
+                link.onclick = function(e) {
+                    e.preventDefault();
+                    document.getElementById(stepId).scrollIntoView({ behavior: 'smooth' });
+                    // For mobile, close sidebar after click
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                    }
+                    // Optional: Highlight active link
+                    sidebarNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+                    link.classList.add('active');
+                };
+                listItem.appendChild(link);
+                sidebarNav.appendChild(listItem);
+            });
+
+            // Set first link as active initially
+            if (sidebarNav.firstChild && sidebarNav.firstChild.firstChild) {
+                 sidebarNav.firstChild.firstChild.classList.add('active');
+            }
+
+
+            // Mobile menu toggle
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                });
+            }
+
+            // Highlight sidebar link on scroll
+            const mainContentArea = document.querySelector('.main-content'); // or window
+            mainContentArea.addEventListener('scroll', function() {
+                let current = '';
+                steps.forEach(step => {
+                    const stepTop = step.offsetTop - 150; // Adjust offset as needed
+                    if (mainContentArea.scrollTop >= stepTop) {
+                        current = step.id;
+                    }
+                });
+
+                sidebarNav.querySelectorAll('a').forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href') === `#${current}`) {
+                        a.classList.add('active');
+                    }
+                });
+            });
         });
 
         // TODO: Add JavaScript to dynamically add new steps if needed
@@ -239,9 +402,16 @@
         //         </div>
         //     `;
         //     mainContent.insertAdjacentHTML('beforeend', newStepHTML);
+        //     // Also update sidebar
+        //     const sidebarNav = document.getElementById('sidebarNav');
+        //     const listItem = document.createElement('li');
+        //     const link = document.createElement('a');
+        //     link.href = `#${newStepId}`;
+        //     link.textContent = `گام ${stepCount}: ${title}`;
+        //     link.onclick = function(e) { /* ... same click handler ... */ };
+        //     listItem.appendChild(link);
+        //     sidebarNav.appendChild(listItem);
         // }
-
-        // Example: addStep("گام سوم: تست مدل بر روی دیتاست جدید", "در این گام مدل را بر روی دیتاست CelebA-HQ تست خواهیم کرد.", ["آماده سازی دیتاست", "اجرای تست‌ها", "تحلیل نتایج"]);
     </script>
 </body>
 </html>
