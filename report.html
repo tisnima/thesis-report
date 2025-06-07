@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش کار پایان نامه - نیما قاسمی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f9fafb; /* Tailwind gray-50 */
+            display: flex;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        .sidebar {
+            width: 250px;
+            min-width: 250px; /* Prevent sidebar from shrinking too much */
+            background-color: #1f2937; /* Tailwind gray-800 */
+            color: white;
+            padding: 1.5rem; /* Tailwind p-6 */
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000; /* Ensure sidebar is above content */
+        }
+        .sidebar h3 {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 700; /* Tailwind font-bold */
+            margin-bottom: 1.5rem; /* Tailwind mb-6 */
+            border-bottom: 1px solid #4b5563; /* Tailwind gray-600 */
+            padding-bottom: 0.75rem; /* Tailwind pb-3 */
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li a {
+            display: block;
+            color: #d1d5db; /* Tailwind gray-300 */
+            padding: 0.75rem 1rem; /* Tailwind py-3 px-4 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            transition: background-color 0.2s ease, color 0.2s ease;
+            text-decoration: none;
+        }
+        .sidebar li a:hover, .sidebar li a.active {
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            color: white;
+        }
+        .main-content-wrapper { /* New wrapper for main content */
+            flex-grow: 1;
+            padding-right: 250px; /* Space for the sidebar */
+            transition: padding-right 0.3s ease-in-out;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .main-content {
+            padding: 1.5rem; /* Tailwind p-6 */
+            max-width: 900px; /* Increased max-width slightly */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* Tailwind rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-lg */
+            padding: 1.5rem; /* Tailwind p-6 */
+            margin-bottom: 1.5rem; /* Tailwind mb-6 */
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .header-title { /* Class for the main h1 title */
+            font-size: 2.25rem; /* Tailwind text-4xl */
+            line-height: 2.5rem; /* Tailwind leading-10 */
+        }
+        .card h2 {
+            font-size: 1.5rem; /* Tailwind text-2xl */
+            font-weight: 700; /* Tailwind font-bold */
+            color: #1f2937; /* Tailwind gray-800 */
+            margin-bottom: 1rem; /* Tailwind mb-4 */
+            border-bottom: 2px solid #60a5fa; /* Tailwind blue-400 */
+            padding-bottom: 0.5rem; /* Tailwind pb-2 */
+        }
+        .card h3 {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 600; /* Tailwind font-semibold */
+            color: #374151; /* Tailwind gray-700 */
+            margin-top: 1rem; /* Tailwind mt-4 */
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+        }
+        .card p, .card ul {
+            color: #4b5563; /* Tailwind gray-600 */
+            line-height: 1.75; /* Tailwind leading-relaxed */
+        }
+        .card ul {
+            list-style-type: disc;
+            padding-right: 1.5rem; /* Tailwind pr-6, equivalent to pl for LTR */
+        }
+        .step-update-info { /* Class for step update date */
+            font-size: 0.75rem; /* Tailwind text-xs */
+            color: #6b7280; /* Tailwind gray-500 */
+            margin-top: 0.75rem; /* Tailwind mt-3 */
+        }
+        .tag {
+            display: inline-block;
+            background-color: #dbeafe; /* Tailwind blue-100 */
+            color: #1e40af; /* Tailwind blue-800 */
+            padding: 0.25rem 0.75rem; /* Tailwind px-3 py-1 */
+            border-radius: 9999px; /* Tailwind rounded-full */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            font-weight: 500; /* Tailwind font-medium */
+            margin-right: 0.5rem; /* Tailwind mr-2 */
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+        }
+        .status {
+            font-weight: bold;
+        }
+        .status-current {
+            color: #2563eb; /* Tailwind blue-600 */
+        }
+        .status-planned {
+            color: #f59e0b; /* Tailwind amber-500 */
+        }
+        .status-completed {
+            color: #16a34a; /* Tailwind green-600 */
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            overflow: hidden;
+            margin-top: 0.5rem; /* Tailwind mt-2 */
+        }
+        .progress-bar {
+            height: 1.25rem; /* Tailwind h-5 */
+            background-color: #3b82f6; /* Tailwind blue-500 */
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 1.25rem; /* Tailwind leading-5 */
+            transition: width 0.5s ease-in-out;
+        }
+        .author-info {
+            background-color: #e0f2fe; /* Tailwind light blue - sky-100 */
+            border: 1px solid #7dd3fc; /* Tailwind sky-300 */
+            padding: 1rem; /* Tailwind p-4 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            margin-bottom: 2rem; /* Tailwind mb-8 */
+        }
+        .author-info p {
+            margin-bottom: 0.5rem; /* Tailwind mb-2 */
+            color: #0c4a6e; /* Tailwind sky-800 */
+        }
+        .author-info strong {
+            color: #0369a1; /* Tailwind sky-700 */
+        }
+        .menu-toggle {  
+            display: none; /* Hidden by default, shown in media query */
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100; /* Above sidebar when it's closed */
+            background-color: #1f2937;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%); /* Hide sidebar by default for RTL */
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content-wrapper {
+                padding-right: 0; /* Main content takes full width */
+            }
+            .main-content {
+                padding: 1rem; /* Tailwind p-4 for smaller screens */
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .header-title { /* Adjust main title size */
+                font-size: 1.875rem; /* Tailwind text-3xl */
+                line-height: 2.25rem; /* Tailwind leading-9 */
+            }
+            .card h2 { /* Adjust card title size */
+                font-size: 1.25rem; /* Tailwind text-xl */
+            }
+            .card h3 { /* Adjust card subtitle size */
+                font-size: 1.125rem; /* Tailwind text-lg */
+            }
+            .author-info {
+                padding: 0.75rem; /* Tailwind p-3 */
+            }
+            .author-info h3 {
+                font-size: 1.125rem; /* Tailwind text-lg */
+            }
+            .step-update-info {
+                font-size: 0.65rem; /* Tailwind text-xs adjusted for mobile */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="sidebar" id="sidebar">
+        <h3>فهرست گام‌ها</h3>
+        <ul id="sidebarNav">
+            </ul>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle">☰ فهرست</button>
+
+    <div class="main-content-wrapper" id="mainContentWrapper">
+        <div class="main-content">
+            <header class="text-center mb-10">
+                <h1 class="header-title font-bold text-blue-600">گزارش پیشرفت پروژه: هوش مصنوعی توضیح‌پذیر در شطرنج</h1>
+                <p class="text-lg text-gray-700 mt-2">
+                    این گزارش به منظور بررسی مراحل پیاده‌سازی و بهبودهای پیشنهادی برای مقاله
+                    <a href="https://arxiv.org/abs/2211.05500" target="_blank" class="text-blue-500 hover:underline">
+                    "Reinforcement Learning in an Adaptable Chess Environment for Detecting Human-understandable Concepts"
+                    </a>
+                    تهیه شده است.
+                </p>
+            </header>
+
+            <div class="author-info">
+                <h3 class="text-xl font-semibold text-sky-700 mb-3">اطلاعات دانشجو:</h3>
+                <p><strong>نام و نام خانوادگی:</strong> نیما قاسمی</p>
+                <p><strong>شماره دانشجویی:</strong> ۴۰۲۵۲۵۲۱۰۰۵ </p>
+                <p><strong>دانشگاه:</strong> تربیت مدرس - دانشکده علوم ریاضی</p>
+                <p><strong>استاد راهنما:</strong> دکتر رزقی </p>
+            </div>
+            
+            <main id="progressReport">
+                <div class="card" id="step-1">
+                    <h2>گام اول: بررسی مقاله پایه و اجرای کد آن</h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-current">انجام شده</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>
+                        در این گام که قبل از ثبت پروپوزال انجام شد، مقاله جز به جز خوانده شد و کد مربوط به آن که در
+                        <a href="https://github.com/patrik-ha/explainable-minichess" target="_blank" class="text-blue-500 hover:underline">
+                        "این ریپوی گیت‌هاب"
+                        </a> 
+                        قرار داشت، اجرا شد و نتایج با مقاله بررسی شد. بازتولید نتایج مقاله باعث شد مرحله پیاده‌سازی کد مقاله با موفقیت یه پایان برسد.
+                        در زیر نکات کلیدی مقاله پایه عنوان شده است.
+                    </p>
+                    <ul>
+                        <li>گونه‌های مختلف شطرنج یعنی 4*5 و 6*6 برای بررسی استفاده شده است که دلیل آن کاهش هزینه‌های محاسباتی بوده است.</li>
+                        <li>شناسایی مفاهیم شطرنج مثل برتری مهره، تهدید مات و و تهدید وزیر در این مقاله بررسی شده است.</li>
+                        <li>ساختار مدل شبکه یادگیری تقویتی ResNet است که ورودی آن پوزیشن‌های مختلف شطرنج و خروجی آن ارزش پوزیشن مربوطه و بهترین حرکت ممکن است. </li>
+                        <li>شناسایی مفاهیم به کمک linear probe که در لایه‌های مختلف قرار می‌گیرد سنجیده می‌شود. این تخمین‌گر خطی به کمک دیتاهای برچسب‌گذاری شده مفاهیم را یاد می‌گیرد.</li>
+                        <li>همه مفاهیم شناسایی شده در دایره علم بشر هست و این نوع از تحلیل تنها مناسب مفاهیم استاتیک است.</li>
+                    </ul>
+                    <h3>اهداف:</h3>
+                    <ul>
+                        <li>شناسایی مفاهیم قابل درک انسانی توسط شبکه تقویتی عمیق</li>
+                        <li>تحلیل همبستگی میان مفاهیم شناسایی شده و ارزش پوزیشن</li>
+                        <li>تفسیرهای پادواقعی و تحلیل پوزیشن‌های مختلف</li>
+                    </ul>
+                    <h3>پیشنهادات برای نوآوری:</h3>
+                    <ul>
+                        <li>استفاده از non-linear probes برای شناسایی مفاهیم</li>
+                        <li>شناسایی مفاهیم استاتیک پیچیده‌تر مانند فضا، جایگذاری مهره‌ها و ساختار پیاده‌ای</li>
+                        <li>استفاده از لایه Attention برای شناسایی مفاهیم </li>
+                    </ul>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%;">100%</div>
+                    </div>
+                </div>
+
+                <div class="card" id="step-2">
+                    <h2>گام دوم: بررسی مقاله‌‌ مرتبط با مفاهیم دینامیک و امکان‌سنجی پیاده‌سازی آن</h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-planned">در حال انجام</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>
+                        بررسی مقاله 
+                        <a href="https://arxiv.org/abs/2310.16410" target="_blank" class="text-blue-500 hover:underline">
+                        "Bridging the Human–AI Knowledge Gap: Concept Discovery and Transfer in AlphaZero"
+                        </a>
+                        در راستای کشف مفاهیم دور از دانش کنونی انسان‌ها. در زیر نکات کلیدی مقاله مشخص شده است. 
+                    </p>
+                    <ul>
+                        <li>معرفی یک چارچوب برای جدید برای یافتن مفاهیم دینامیک که دنباله‌ای از حرکات هستند از طریق مقایسه حرکات بهینه و ضعیف AlphaZero</li>
+                        <li>فیلتر کردن مفاهیم برای دستیابی مفاهیم نوآورانه و قابل آموزش</li>
+                        <li>یادگیری ۴ استادبزرگ شطرنج از مفاهیم استخراج شده از AlphaZero </li>
+                        <li>استفاده از یادگیری بدون نظارت برای شناسایی مفاهیم به کمک حل یه مسئله بهینه‌سازی محدب</li>
+                    </ul>
+                    <h3>چالش‌های پیش‌بینی شده:</h3>
+                    <ul>
+                        <li>پیاده‌سازی کد این مقاله و شناسایی مفاهیم در گونه‌های کوجکتر شطرنج</li>
+                        <li>شناسایی مفاهیم پیچیده‌تر در بازی AlphaZero</li>
+                        <li>یافتن مفاهیم برخلاف درک و شهود کنونی انسان‌ها</li>
+                    </ul>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 20%;">20%</div>
+                    </div>
+                </div>
+
+                <!--
+                <div class="card" id="step-3">
+                    <h2>گام سوم: [عنوان گام سوم]</h2>
+                    <p><span class="tag">وضعیت</span> <span class="status status-planned">برنامه‌ریزی شده</span></p>
+                    <h3>شرح فعالیت:</h3>
+                    <p>[توضیحات گام سوم]</p>
+                    <ul>
+                        <li>[مورد ۱]</li>
+                        <li>[مورد ۲]</li>
+                    </ul>
+                    <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">تاریخ اولیه</span></p>
+                    <h3>پیشرفت:</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 0%;">0%</div>
+                    </div>
+                </div>
+                -->
+            </main>
+
+            <footer class="text-center mt-12 py-6 border-t border-gray-300">
+                <p class="text-gray-600 text-sm">
+                    آخرین بروزرسانی کلی گزارش: <span id="overallLastUpdated"></span>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Function to update the progress of a step and its last updated date
+        function updateStep(stepId, percentage, dateString) {
+            const stepElement = document.getElementById(stepId);
+            if (stepElement) {
+                const progressBar = stepElement.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = percentage + '%';
+                    progressBar.textContent = percentage + '%';
+                }
+                const dateSpan = stepElement.querySelector('.step-update-date');
+                if (dateSpan) {
+                    if (dateString) {
+                        dateSpan.textContent = dateString;
+                    } else { // Auto-update with current date and time if no dateString is provided
+                        dateSpan.textContent = new Date().toLocaleDateString('fa-IR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                }
+            }
+        }
+        
+        // Example call: updateStep('step-1', 70); // Updates progress and sets step's date to now
+        // Example call: updateStep('step-2', 10, '۱۲ خرداد ۱۴۰۴، ساعت ۱۱:۰۰'); // Updates progress and sets specific date
+
+
+        // Set overall last updated date for the report
+        document.getElementById('overallLastUpdated').textContent = new Date().toLocaleDateString('fa-IR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Sidebar navigation and population
+        document.addEventListener('DOMContentLoaded', function () {
+            const reportContainer = document.getElementById('progressReport');
+            const sidebarNav = document.getElementById('sidebarNav');
+            const steps = reportContainer.querySelectorAll('.card');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            const mainContentWrapper = document.getElementById('mainContentWrapper');
+
+
+            steps.forEach(step => {
+                const stepTitle = step.querySelector('h2').textContent;
+                const stepId = step.id;
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `#${stepId}`;
+                link.textContent = stepTitle;
+                link.onclick = function(e) {
+                    e.preventDefault();
+                    const targetElement = document.getElementById(stepId);
+                    if (targetElement) {
+                        mainContentWrapper.scrollTo({
+                            top: targetElement.offsetTop - mainContentWrapper.offsetTop - 20, 
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                    }
+                    sidebarNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+                    link.classList.add('active');
+                };
+                listItem.appendChild(link);
+                sidebarNav.appendChild(listItem);
+            });
+
+            if (sidebarNav.firstChild && sidebarNav.firstChild.firstChild) {
+                 sidebarNav.firstChild.firstChild.classList.add('active');
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                });
+            }
+
+            mainContentWrapper.addEventListener('scroll', function() {
+                let current = '';
+                let minDistance = Infinity;
+
+                steps.forEach(step => {
+                    const stepElement = document.getElementById(step.id);
+                    if (stepElement) {
+                        const rect = stepElement.getBoundingClientRect();
+                        const distanceToTop = Math.abs(rect.top - mainContentWrapper.getBoundingClientRect().top);
+
+                        if (rect.top <= (mainContentWrapper.getBoundingClientRect().top + 150) && rect.bottom >= mainContentWrapper.getBoundingClientRect().top) {
+                           if (distanceToTop < minDistance) {
+                               minDistance = distanceToTop;
+                               current = step.id;
+                           }
+                        }
+                    }
+                });
+
+                sidebarNav.querySelectorAll('a').forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href') === `#${current}`) {
+                        a.classList.add('active');
+                    }
+                });
+                if (!current && sidebarNav.firstChild && sidebarNav.firstChild.firstChild && mainContentWrapper.scrollTop < 100) {
+                    // sidebarNav.firstChild.firstChild.classList.add('active'); // Optionally keep first active if scrolled to top
+                }
+            });
+             // Initialize progress for existing steps (if needed, or set initial dates in HTML)
+            // updateStep('step-1', 60); // This will also update its date to now
+        });
+
+        // Function to dynamically add new steps (if you implement this feature)
+        // function addStep(title, description, tasks = [], status = 'برنامه‌ریزی شده', progress = 0, initialDate = 'تاریخ اولیه') {
+        //     const mainContent = document.getElementById('progressReport');
+        //     const stepCount = mainContent.querySelectorAll('.card').length + 1;
+        //     const newStepId = `step-${stepCount}`;
+
+        //     let taskListHTML = '';
+        //     if (tasks.length > 0) {
+        //         taskListHTML = '<ul>' + tasks.map(task => `<li>${task}</li>`).join('') + '</ul>';
+        //     }
+            
+        //     const statusClass = status === 'فعلی' ? 'status-current' : status === 'تکمیل شده' ? 'status-completed' : 'status-planned';
+
+        //     const newStepHTML = `
+        //         <div class="card" id="${newStepId}">
+        //             <h2>گام ${stepCount}: ${title}</h2>
+        //             <p><span class="tag">وضعیت</span> <span class="status ${statusClass}">${status}</span></p>
+        //             <h3>شرح فعالیت:</h3>
+        //             <p>${description}</p>
+        //             ${taskListHTML}
+        //             <p class="step-update-info">آخرین بروزرسانی گام: <span class="step-update-date">${initialDate}</span></p>
+        //             <h3>پیشرفت:</h3>
+        //             <div class="progress-bar-container">
+        //                 <div class="progress-bar" style="width: ${progress}%;">${progress}%</div>
+        //             </div>
+        //         </div>
+        //     `;
+        //     mainContent.insertAdjacentHTML('beforeend', newStepHTML);
+
+        //     // Add to sidebar
+        //     const sidebarNav = document.getElementById('sidebarNav');
+        //     const listItem = document.createElement('li');
+        //     const link = document.createElement('a');
+        //     link.href = `#${newStepId}`;
+        //     link.textContent = `گام ${stepCount}: ${title}`;
+        //     link.onclick = function(e) { /* ... (same click handler as above) ... */ };
+        //     listItem.appendChild(link);
+        //     sidebarNav.appendChild(listItem);
+        // }
+    </script>
+</body>
+</html>
